@@ -34,7 +34,7 @@ public class ClientController {
         this.gRPCClientService=gRPCClientService;
     }
 
-    @PostMapping("/customer")
+    @PostMapping("/registration/customer")
     public CustomerClientRequest createCustomer(@RequestBody CustomerClientRequest customerClientRequest) {
 
         Customer customer=gRPCClientService.saveCustomer(customerClientRequest);
@@ -52,7 +52,7 @@ public class ClientController {
                 .build();
     }
 
-    @PostMapping("/bank")
+    @PostMapping("/registration/bank")
     public BankClientRequest createBank(@RequestBody BankClientRequest bankClientRequest){
 
         Bank bank=gRPCClientService.saveBank(bankClientRequest);
@@ -64,7 +64,7 @@ public class ClientController {
                 .build();
     }
 
-    @PostMapping("/bankEmp")
+    @PostMapping("/registration/bankEmp")
     public BankEmpClientRequest createBankEmp(@RequestBody BankEmpClientRequest bankEmpClientRequest){
 
         BankEmp bankEmp=gRPCClientService.saveBankEmp(bankEmpClientRequest);
@@ -77,7 +77,7 @@ public class ClientController {
     }
 
 
-    @PostMapping("/branch")
+    @PostMapping("/registration/branch")
     public BranchClientRequest createBranch(@RequestBody BranchClientRequest branchClientRequest){
 
         Branch branch=gRPCClientService.saveBranch(branchClientRequest);
@@ -104,6 +104,44 @@ public class ClientController {
         System.out.println(result);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
+    }
+
+    @PutMapping(value = "/update/bank")
+    public ResponseEntity<?> UpdateBank(@RequestBody BankClientRequest bankClientRequest) {
+        String successMessage="";
+         gRPCClientService.UpdateBank(bankClientRequest);
+
+
+        //String successMessage = environment.getProperty("API.UPDATE_SUCCESS");
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/Update/customer")
+    public ResponseEntity<?> UpdateCustomer(@RequestBody CustomerClientRequest customerClientRequest) {
+        String successMessage="";
+        gRPCClientService.UpdateCustomer(customerClientRequest);
+
+
+        //String successMessage = environment.getProperty("API.UPDATE_SUCCESS");
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
+    }
+    @PutMapping(value = "/update/branch")
+    public ResponseEntity<?> UpdateBranch(@RequestBody BranchClientRequest branchClientRequest) {
+        String successMessage="";
+        gRPCClientService.UpdateBranch(branchClientRequest);
+
+
+        //String successMessage = environment.getProperty("API.UPDATE_SUCCESS");
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
+    }
+    @PutMapping(value = "/update/bankEmp")
+    public ResponseEntity<?> UpdateBankEmp(@RequestBody BankEmpClientRequest bankEmpClientRequest) {
+        String successMessage="";
+        gRPCClientService.UpdateBankEmp(bankEmpClientRequest);
+
+
+        //String successMessage = environment.getProperty("API.UPDATE_SUCCESS");
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
     }
 
 

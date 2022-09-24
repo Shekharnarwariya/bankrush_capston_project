@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class CustomerClientRequest {
 
-    private String custId;
+    private long custId;
     private String name;
     private String emailId;
     private String mobNo;

@@ -8,20 +8,23 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "customer")
 public class Customer {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "cust_id")
     private long custId;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "email_id")
+    @Column(name = "email_id", nullable = false)
     private String emailId;
-    @Column(name = "mob_no")
+    @Column(name = "mob_no", nullable = false)
     private String mobNo;
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String username;
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
     @Column(name = "street_address")
     private String streetAddress;
@@ -31,7 +34,6 @@ public class Customer {
     private String state;
     @Column(name = "pincode")
     private String pincode;
-
 
 
 }

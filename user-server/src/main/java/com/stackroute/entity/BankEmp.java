@@ -1,27 +1,26 @@
 package com.stackroute.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import lombok.*;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Data
 @Entity
 @Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "bank_emp")
 public class BankEmp {
 
     @Id
-    @Column(name="emp_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "emp_id")
     private long empId;
-    @Column(name="username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Column(name="password")
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name="ifsc_code")
+    @Column(name = "ifsc_code", nullable = false)
     private String ifscCode;
 }

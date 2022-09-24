@@ -8,113 +8,226 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.stackroute.grpc.*;
 
 
-
-
-
-
-
 @Service
-public class GRPCClientService  {
-//
-//    @Value("${grpcOne.port:9090}")
-//    private int grpcServerOnePort;
-//
-//    @Value("${grpcOne.host:localhost}")
-//    private String grpcServerOneHost;
-
+public class GRPCClientService {
 
 
     private final static Logger log = LoggerFactory.getLogger(GRPCClientService.class);
 
+
     public Customer saveCustomer(CustomerClientRequest request) {
         log.info("### Start execute GRPCClientService from server two");
-        //log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
-        //ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerOneHost, grpcServerOnePort).usePlaintext().build();
-
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
-        userServerGrpc.userServerBlockingStub stub= userServerGrpc.newBlockingStub(channel);
+        Customer customer = null;
+        try {
+            //log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
+            // ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+            userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
 
-        Customer customer=stub.createCustomer(Customer.newBuilder()
-                .setCustId(request.getCustId())
-                .setName(request.getName())
-                .setEmailId(request.getEmailId())
-                .setMobNo(request.getMobNo())
-                .setUserName(request.getUserName())
-                .setPassword(request.getPassword())
-                .setStreetAddress(request.getStreetAddress())
-                .setCity(request.getCity())
-                .setState(request.getState())
-                .setPincode(request.getPincode())
-                .build());
-        channel.shutdown();
+            Customer customerBuilder = Customer.newBuilder()
+                    .setCustId(request.getCustId())
+                    .setName(request.getName())
+                    .setEmailId(request.getEmailId())
+                    .setMobNo(request.getMobNo())
+                    .setUserName(request.getUserName())
+                    .setPassword(request.getPassword())
+                    .setStreetAddress(request.getStreetAddress())
+                    .setCity(request.getCity())
+                    .setState(request.getState())
+                    .setPincode(request.getPincode())
+                    .build();
 
+            customer = stub.createCustomer(customerBuilder);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
         return customer;
     }
 
 
-    public Bank saveBank(BankClientRequest request){
+    public Bank saveBank(BankClientRequest request) {
         log.info("### Start execute GRPCClientService from server two");
-       // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
-        //ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerOneHost, grpcServerOnePort).usePlaintext().build();
+        // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
-        userServerGrpc.userServerBlockingStub stub= userServerGrpc.newBlockingStub(channel);
+        Bank bank = null;
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        try {
+            bank = stub.createBank(Bank.newBuilder()
+                    .setBankId(request.getBankId())
+                    .setBankName(request.getBankName())
+                    .setUsername(request.getUsername())
+                    .setPassword(request.getPassword())
+                    .build());
 
-
-        Bank bank=stub.createBank(Bank.newBuilder()
-                .setBankId(request.getBankId())
-                .setBankName(request.getBankName())
-                .setUsername(request.getUsername())
-                .setPassword(request.getPassword())
-                .build());
-        channel.shutdown();
-
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
         return bank;
 
+
     }
 
 
-    public BankEmp saveBankEmp(BankEmpClientRequest request)
-    {
+    public BankEmp saveBankEmp(BankEmpClientRequest request) {
         //log.info("### Start execute GRPCClientService from server two");
-       // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
-       // ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerOneHost, grpcServerOnePort).usePlaintext().build();
+        // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
-        userServerGrpc.userServerBlockingStub stub= userServerGrpc.newBlockingStub(channel);
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        BankEmp bankEmp = null;
+        try {
+            bankEmp = stub.createBankEmp(BankEmp.newBuilder()
+                    .setEmpId(request.getEmpId())
+                    .setUsername(request.getUsername())
+                    .setPassword(request.getPassword())
+                    .setIfscCode(request.getIfscCode())
+                    .build());
+        } catch (Exception e) {
+            log.error(e.getMessage());
 
-        BankEmp bankEmp=stub.createBankEmp(BankEmp.newBuilder()
-                .setEmpId(request.getEmpId())
-                .setUsername(request.getUsername())
-                .setPassword(request.getPassword())
-                .setIfscCode(request.getIfscCode())
-                .build());
-        channel.shutdown();
-
+        } finally {
+            channel.shutdown();
+        }
         return bankEmp;
-
     }
 
-    public  Branch saveBranch(BranchClientRequest request){
+    public Branch saveBranch(BranchClientRequest request) {
         log.info("### Start execute GRPCClientService from server two");
         //log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
-       // ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcServerOneHost, grpcServerOnePort).usePlaintext().build();
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
-        userServerGrpc.userServerBlockingStub stub= userServerGrpc.newBlockingStub(channel);
-
-        Branch branch=stub.createBranch(Branch.newBuilder()
-                .setIfscCode(request.getIfscCode())
-                .setBankId(request.getBankId())
-                .setStreetAddress(request.getStreetAddress())
-                .setCity(request.getCity())
-                .setState(request.getState())
-                .setPincode(request.getPincode())
-                .build());
-        channel.shutdown();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        Branch branch = null;
+        try {
+            branch = stub.createBranch(Branch.newBuilder()
+                    .setIfscCode(request.getIfscCode())
+                    .setBankId(request.getBankId())
+                    .setStreetAddress(request.getStreetAddress())
+                    .setCity(request.getCity())
+                    .setState(request.getState())
+                    .setPincode(request.getPincode())
+                    .build());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
         return branch;
+
+    }
+
+
+    public String UpdateBranch(BranchClientRequest request) {
+        log.info("### Start execute GRPCClientService from server two");
+        //log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        UpdateResponse updateResponse = null;
+        try {
+
+            updateResponse = stub.updateBranchDetails(Branch.newBuilder()
+                    .setIfscCode(request.getIfscCode())
+                    .setBankId(request.getBankId())
+                    .setStreetAddress(request.getStreetAddress())
+                    .setCity(request.getCity())
+                    .setState(request.getState())
+                    .setPincode(request.getPincode())
+                    .build());
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
+        return updateResponse.getResponseMessage();
+
+
+    }
+
+    public String UpdateBank(BankClientRequest request) {
+
+        log.info("### Start execute GRPCClientService from server two");
+        // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        UpdateResponse updateResponse = null;
+        try {
+
+            updateResponse = stub.updateBankPassword(Bank.newBuilder()
+                    .setBankId(request.getBankId())
+                    .setBankName(request.getBankName())
+                    .setUsername(request.getUsername())
+                    .setPassword(request.getPassword())
+                    .build());
+
+            return updateResponse.getResponseMessage();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
+        return updateResponse.getResponseMessage();
+    }
+
+    public String UpdateCustomer(CustomerClientRequest request) {
+
+        log.info("### Start execute GRPCClientService from server two");
+        // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        UpdateResponse updateResponse = null;
+
+        try {
+            updateResponse = stub.updateCustomerDetails(Customer.newBuilder()
+                    .setCustId(request.getCustId())
+                    .setName(request.getName())
+                    .setEmailId(request.getEmailId())
+                    .setMobNo(request.getMobNo())
+                    .setUserName(request.getUserName())
+                    .setPassword(request.getPassword())
+                    .setStreetAddress(request.getStreetAddress())
+                    .setCity(request.getCity())
+                    .setState(request.getState())
+                    .setPincode(request.getPincode())
+                    .build());
+
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
+        return updateResponse.getResponseMessage();
+    }
+
+    public String UpdateBankEmp(BankEmpClientRequest request) {
+
+        log.info("### Start execute GRPCClientService from server two");
+        // log.info(String.format("## grpcServerOneHost::%s and grpcServerPort::%s", grpcServerOneHost, grpcServerOnePort));
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        UpdateResponse updateResponse = null;
+
+        try {
+            updateResponse = stub.updateBanKEmpPassword(BankEmp.newBuilder()
+                    .setEmpId(request.getEmpId())
+                    .setUsername(request.getUsername())
+                    .setPassword(request.getPassword())
+                    .setIfscCode(request.getIfscCode())
+                    .build());
+            return updateResponse.getResponseMessage();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            channel.shutdown();
+        }
+        return updateResponse.getResponseMessage();
     }
 
 }

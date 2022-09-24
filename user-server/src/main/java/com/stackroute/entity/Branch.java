@@ -1,22 +1,22 @@
 package com.stackroute.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
+
 import lombok.*;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Data
 @Entity
 @ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "branch")
 public class Branch {
 
     @Id
     @Column(name="ifsc_Code")
     private String ifscCode;
-    @Column(name="bank_id")
+    @Column(name="bank_id",nullable = false)
     private long bankId;
     @Column(name = "street_address")
     private String streetAddress;

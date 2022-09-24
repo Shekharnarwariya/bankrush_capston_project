@@ -10,15 +10,19 @@ import javax.persistence.Entity;
 @Builder
 @Entity
 @ToString
-@Table(name ="bank")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "bank")
 public class Bank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="bank_id")
+    @Column(name = "bank_id")
     private long bankId;
-    @Column(name="bank_name")
+    @Column(name = "bank_name")
     private String bankName;
+   @Column(name = "username")
     private String username;
+   @Column(name = "password")
     private String password;
 }

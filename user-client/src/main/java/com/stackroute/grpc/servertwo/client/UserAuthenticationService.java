@@ -12,14 +12,14 @@ public class UserAuthenticationService {
     public String generateToken(String username,String password,String role) {
 
         System.out.println("Inside getToken()");
-        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
-        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(managedChannel);
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
 
 
         LoginResponse response = stub.userLogin(LoginRequest.newBuilder().setUsername(username).setPassword(password).setRole(role).build());
         System.out.println("response obtained");
         System.out.println(response.getResponseMessage());
-        managedChannel.shutdown();
+        channel.shutdown();
         return response.getResponseMessage();
 
     }

@@ -12,6 +12,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.Column;
+
 
 @GrpcService
 public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
@@ -34,17 +36,18 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
 
     @Override
     public void createCustomer(Customer request, StreamObserver<Customer> responseObserver) {
+        System.out.println(request);
 
-        long custId= Long.parseLong(Customer.newBuilder(request).getCustId());
+        long custId= Customer.newBuilder(request).getCustId();
         String name=Customer.newBuilder(request).getName();
-        String emailId=Customer.newBuilder().getEmailId();
-        String mobNo=Customer.newBuilder().getMobNo();
-        String userName=Customer.newBuilder().getUserName();
-        String password=Customer.newBuilder().getPassword();
-        String streetAddress=Customer.newBuilder().getUserName();
-        String city=Customer.newBuilder().getCity();
-        String state=Customer.newBuilder().getState();
-        String pincode=Customer.newBuilder().getPincode();
+        String emailId=Customer.newBuilder(request).getEmailId();
+        String mobNo=Customer.newBuilder(request).getMobNo();
+        String userName=Customer.newBuilder(request).getUserName();
+        String password=Customer.newBuilder(request).getPassword();
+        String streetAddress=Customer.newBuilder(request).getUserName();
+        String city=Customer.newBuilder(request).getCity();
+        String state=Customer.newBuilder(request).getState();
+        String pincode=Customer.newBuilder(request).getPincode();
 
 
         com.stackroute.entity.Customer customerRequest=
@@ -108,12 +111,12 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
 
     @Override
     public void createBranch(Branch request, StreamObserver<Branch> responseObserver) {
-        String ifscCode=Branch.newBuilder().getIfscCode();
-        long bankId=Branch.newBuilder().getBankId();
-        String streetAddress=Branch.newBuilder().getStreetAddress();
-        String city=Branch.newBuilder().getCity();
-        String state=Branch.newBuilder().getState();
-        String pincode=Branch.newBuilder().getPincode();
+        String ifscCode=Branch.newBuilder(request).getIfscCode();
+        long bankId=Branch.newBuilder(request).getBankId();
+        String streetAddress=Branch.newBuilder(request).getStreetAddress();
+        String city=Branch.newBuilder(request).getCity();
+        String state=Branch.newBuilder(request).getState();
+        String pincode=Branch.newBuilder(request).getPincode();
 
         com.stackroute.entity.Branch branchRequest=
                 com.stackroute.entity.Branch.builder()
@@ -125,8 +128,8 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
                         .pincode(pincode)
                         .build();
 
+        System.out.println(branchRequest);
 
-        //ifscCode,bankId,streetAddress,city,state,pincode);
         branchRepository.save(branchRequest);
 
         responseObserver.onNext(request);
@@ -192,4 +195,129 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
         responseObserver.onCompleted();
 
     }
+
+    @Override
+    public void updateCustomerDetails(Customer request, StreamObserver<UpdateResponse> responseObserver) {
+
+        String emailId=request.getEmailId();
+        String mobNo=request.getMobNo();
+        String username = request.getUserName();
+        String password = request.getPassword();
+        String streetAddress=request.getStreetAddress();
+        String city=request.getCity();
+        String state=request.getState();
+        String pincode=request.getPincode();
+        String responseMessage = "yses";
+
+        com.stackroute.entity.Customer customer=customerRepository.findByUsername(username);
+
+        if(emailId!="")
+        {
+            customer.setEmailId(emailId);
+
+        }
+        if(mobNo!="")
+        {
+            customer.setMobNo(mobNo);
+
+        }
+        if(password!="")
+        {
+            customer.setPassword(password);
+
+        }
+        if(city!="")
+        {
+            customer.setCity(city);
+
+        }
+        if(streetAddress!="")
+        {
+            customer.setStreetAddress(streetAddress);
+
+        }
+        if(state!="")
+        {
+            customer.setState(state);
+
+        }
+        if(pincode!="")
+        {
+            customer.setPincode(pincode);
+
+        }
+
+        customerRepository.save(customer);
+        UpdateResponse response = UpdateResponse.newBuilder().setResponseMessage(responseMessage).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+    }
+
+    @Override
+    public void updateBranchDetails(Branch request, StreamObserver<UpdateResponse> responseObserver) {
+        String ifscCode=request.getIfscCode();
+        String streetAddress=request.getStreetAddress();
+        String city=request.getCity();
+        String state=request.getState();
+        String pincode=request.getPincode();
+        String responseMessage = "yses";
+        com.stackroute.entity.Branch branch=branchRepository.findByIfscCode(ifscCode);
+
+        if(city!="")
+        {
+            branch.setCity(city);
+
+        }
+        if(streetAddress!="")
+        {
+            branch.setStreetAddress(streetAddress);
+
+        }
+        if(state!="")
+        {
+            branch.setState(state);
+
+        }
+        if(pincode!="")
+        {
+            branch.setPincode(pincode);
+
+        }
+
+        branchRepository.save(branch);
+        UpdateResponse response = UpdateResponse.newBuilder().setResponseMessage(responseMessage).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+    }
+
+    @Override
+    public void updateBanKEmpPassword(BankEmp request, StreamObserver<UpdateResponse> responseObserver) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+        String responseMessage = "yses";
+        com.stackroute.entity.BankEmp bankEmp=bankEmpRepository.findByUsername(username);
+        bankEmp.setPassword(password);
+        bankEmpRepository.save(bankEmp);
+        UpdateResponse response = UpdateResponse.newBuilder().setResponseMessage(responseMessage).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateBankPassword(Bank request, StreamObserver<UpdateResponse> responseObserver) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+        String responseMessage = "yses";
+        com.stackroute.entity.Bank bank=bankRepository.findByUsername(username);
+        bank.setPassword(password);
+        bankRepository.save(bank);
+        UpdateResponse response = UpdateResponse.newBuilder().setResponseMessage(responseMessage).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+    }
 }
+
+

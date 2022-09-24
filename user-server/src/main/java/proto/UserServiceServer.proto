@@ -13,8 +13,12 @@ message LoginResponse{
   string responseMessage=2;
 }
 
+message  UpdateResponse{
+  string responseMessage=2;
+}
+
 message Customer {
-  string custId=1;
+  int64 custId=1;
   string name=2;
   string emailId=3;
   string mobNo=4;
@@ -49,6 +53,10 @@ message BankEmp{
   string ifscCode=4;
 }
 
+message CustomerByUsername{
+  string username=1;
+}
+
 
 
 service userServer {
@@ -57,4 +65,9 @@ service userServer {
   rpc createBranch(Branch) returns (Branch);
   rpc createBankEmp(BankEmp) returns (BankEmp);
   rpc userLogin(LoginRequest) returns(LoginResponse);
+  rpc updateBankPassword(Bank) returns (UpdateResponse);
+  rpc updateCustomerDetails(Customer) returns (UpdateResponse);
+  rpc updateBranchDetails(Branch) returns (UpdateResponse);
+  rpc updateBanKEmpPassword(BankEmp) returns (UpdateResponse);
+
 }
