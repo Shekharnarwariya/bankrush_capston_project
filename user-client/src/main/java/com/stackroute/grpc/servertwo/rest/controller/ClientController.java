@@ -4,7 +4,6 @@ import com.stackroute.grpc.BankEmp;
 import com.stackroute.grpc.Branch;
 import com.stackroute.grpc.Customer;
 import com.stackroute.grpc.servertwo.client.GRPCClientService;
-import com.stackroute.grpc.servertwo.client.UserAuthenticationService;
 import com.stackroute.grpc.servertwo.rest.dto.BankClientRequest;
 import com.stackroute.grpc.servertwo.rest.dto.BankEmpClientRequest;
 import com.stackroute.grpc.servertwo.rest.dto.BranchClientRequest;
@@ -25,8 +24,6 @@ public class ClientController {
     @Autowired
     private final GRPCClientService gRPCClientService;
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
 
     private final static Logger log = LoggerFactory.getLogger(ClientController.class);
 
@@ -94,15 +91,13 @@ public class ClientController {
     @GetMapping("/login/{username}/{password}/{role}")
     public ResponseEntity<?> loginUser(@PathVariable String username, @PathVariable String password, @PathVariable String role) throws InvalidRoleException, InvalidCredentialsException {
         String result;
-        System.out.println("In controller");
-        result= userAuthenticationService.generateToken(username,password,role);
+        result= gRPCClientService.generateToken(username,password,role);
         if(result.equals("InvalidRole"))
             throw new InvalidRoleException();
         else if(result.equals("InvalidUser"))
             throw new InvalidCredentialsException();
 
-        System.out.println(result);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>("Logged in , Token :"+result, HttpStatus.OK);
 
     }
 

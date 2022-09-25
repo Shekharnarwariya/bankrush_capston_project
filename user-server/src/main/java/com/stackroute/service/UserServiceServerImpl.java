@@ -140,23 +140,18 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
 
     @Override
     public void userLogin(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
-        System.out.println("Inside server");
         String username = request.getUsername();
         String password = request.getPassword();
         String role = request.getRole();
         String responseMessage;
         LoginResponse response;
         String token;
-        System.out.println("Inside server"+username+" "+password+" "+role);
         if (role.equalsIgnoreCase("Customer")) {
-            System.out.println("inside customer if");
             com.stackroute.entity.Customer customer=customerRepository.findByUsernameAndPassword(username,password);
             if (customer == null) {
-                System.out.println("if null");
                 responseMessage = "InvalidUser";
             }
             else{
-                System.out.println(" not null");
                 responseMessage="ValidUser";
             }
 

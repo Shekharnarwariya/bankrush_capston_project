@@ -229,5 +229,13 @@ public class GRPCClientService {
         }
         return updateResponse.getResponseMessage();
     }
+    public String generateToken(String username,String password,String role) {
 
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
+        userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
+        LoginResponse response = stub.userLogin(LoginRequest.newBuilder().setUsername(username).setPassword(password).setRole(role).build());
+        channel.shutdown();
+        return response.getResponseMessage();
+
+    }
 }
