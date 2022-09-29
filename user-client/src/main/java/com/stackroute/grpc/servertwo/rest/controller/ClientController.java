@@ -139,16 +139,4 @@ public class ClientController {
         return new ResponseEntity<>(successMessage, HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -13,6 +13,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Column;
+import java.util.Base64;
 
 
 @GrpcService
@@ -178,7 +179,12 @@ public class UserServiceServerImpl extends userServerGrpc.userServerImplBase {
         }
 
         if(responseMessage.equals("ValidUser")) {
+
+          if(role.equalsIgnoreCase("Customer"))
+              token = Jwts.builder().setId(username).setSubject(role).claim("email",customerRepository.findByUsername(username).getEmailId()).signWith(SignatureAlgorithm.HS256, "mysecret").compact();
+             else
             token = Jwts.builder().setId(username).setSubject(role).signWith(SignatureAlgorithm.HS256, "mysecret").compact();
+
             response = LoginResponse.newBuilder().setResponseMessage(token).build();
         }
 

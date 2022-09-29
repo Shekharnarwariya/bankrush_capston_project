@@ -6,14 +6,25 @@ import com.stackroute.grpc.servertwo.rest.dto.BranchClientRequest;
 import com.stackroute.grpc.servertwo.rest.dto.CustomerClientRequest;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import com.stackroute.grpc.*;
 
 
 @Service
 public class GRPCClientService {
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
 
     private final static Logger log = LoggerFactory.getLogger(GRPCClientService.class);
@@ -234,7 +245,17 @@ public class GRPCClientService {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090).usePlaintext().build();
         userServerGrpc.userServerBlockingStub stub = userServerGrpc.newBlockingStub(channel);
         LoginResponse response = stub.userLogin(LoginRequest.newBuilder().setUsername(username).setPassword(password).setRole(role).build());
+        Jws<Claims> result= Jwts.parser().setSigningKey("mysecret").parseClaimsJws(response.getResponseMessage());
         channel.shutdown();
+        String email = result.getBody().get("email",String.class);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject("BankRush- Login");
+        mailMessage.setText("You have successfully logged in to BankRush!!");
+        mailMessage.setFrom("bankrush.app@gmail.com");
+     //   JavaMailSenderImpl javaMailSender=new JavaMailSenderImpl();
+        javaMailSender.send(mailMessage);
+
         return response.getResponseMessage();
 
     }
