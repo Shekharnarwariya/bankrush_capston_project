@@ -10,4 +10,7 @@ public class QueryManagementServerApplication {
 		SpringApplication.run(QueryManagementServerApplication.class, args);
 	}
 
-}
+
+
+	}
+
