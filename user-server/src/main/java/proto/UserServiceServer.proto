@@ -56,6 +56,15 @@ message BankEmp{
 message CustomerByUsername{
   string username=1;
 }
+message BankByUsername{
+  string username=1;
+}
+message BankEmpByUsername{
+  string username=1;
+}
+message BranchByIfscCode{
+  string IfscCode=1;
+}
 
 
 
@@ -69,5 +78,8 @@ service userServer {
   rpc updateCustomerDetails(Customer) returns (UpdateResponse);
   rpc updateBranchDetails(Branch) returns (UpdateResponse);
   rpc updateBanKEmpPassword(BankEmp) returns (UpdateResponse);
-
+  rpc getBank(BankByUsername) returns(Bank);
+  rpc getCustomer(CustomerByUsername) returns(Customer);
+  rpc getBankEmp(BankEmpByUsername) returns(BankEmp);
+  rpc getBranch(BranchByIfscCode) returns(Branch);
 }
